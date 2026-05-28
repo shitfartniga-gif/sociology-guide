@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fong's Socio Guide - Grade 11 Sociology Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #121824;
+            --bg-tertiary: #1e2640;
+            --accent: #4f46e5;
+            --accent-hover: #6366f1;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #2d3748;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .logo-area h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--bg-tertiary);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 2rem 4rem;
+            max-width: 1200px;
+        }
+
+        /* Search & Header Row */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 350px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Dashboard Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #121824 100%);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .welcome-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .quote-box {
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            color: #c7d2fe;
+        }
+
+        .tracker-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .progress-circle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .progress-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-hover);
+        }
+
+        /* Modular Section Cards */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .content-section.active-section {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .topic-header h2 {
+            font-size: 2rem;
+            color: var(--text-main);
+        }
+
+        /* Tab Menu for sub-features */
+        .tab-menu {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            border-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Detail Elements Accordion style */
+        .accordion-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .accordion-header {
+            padding: 1.25rem;
+            font-weight: 600;
+            background-color: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .accordion-body {
+            padding: 1.5rem;
+            display: none;
+            line-height: 1.7;
+            color: #d1d5db;
+        }
+
+        .accordion-body h3 {
+            color: var(--text-main);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--accent);
+            padding-left: 0.5rem;
+        }
+
+        .accordion-body h4 {
+            color: #e5e7eb;
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .accordion-body ul, .accordion-body ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .accordion-body p {
+            margin-bottom: 1rem;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem;
+            border-left: 4px solid;
+            border-radius: 4px;
+            margin: 1rem 0;
+            background-color: rgba(255,255,255,0.02);
+        }
+        .callout.tip { border-color: var(--success); color: #a7f3d0; }
+        .callout.danger { border-color: var(--danger); color: #fca5a5; }
+
+        /* Flashcard Design Layout */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .flashcard {
+            height: 220px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .flashcard-front {
+            background-color: var(--bg-secondary);
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .flashcard-back {
+            background-color: var(--bg-tertiary);
+            color: #e5e7eb;
+            transform: rotateY(180deg);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            overflow-y: auto;
+        }
+
+        /* Quiz UI Design */
+        .quiz-box {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent);
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+
+        .option-btn.correct {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+        }
+
+        .option-btn.incorrect {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+        }
+
+        .quiz-feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        /* Comparison Data Matrix */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: var(--bg-tertiary);
+        }
+
+        /* Grid metrics cards */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .metric-card h4 {
+            color: var(--accent-hover);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Additional Styles Specific to the Sociology Analysis Module Component */
+        .section-intro {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-divider {
+            border: 0;
+            height: 1px;
+            background: var(--border);
+            margin: 3rem 0;
+        }
+        .options-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .options-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .analysis-card-item {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .essay-response-box {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--accent);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #d1d5db;
+        }
+        .essay-response-box ul, .essay-response-box ol {
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+        .essay-response-box li {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Responsive Setup */
+        @media(max-width: 992px) {
+            aside { width: 70px; padding: 2rem 0.5rem; align-items: center;}
+            .logo-area h2, .nav-item span { display: none; }
+            main { margin-left: 70px; padding: 2rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation Shell -->
+    <aside>
+        <div class="logo-area">
+            <h2>Fong's Socio Guide</h2>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item active" onclick="switchMainSection('dashboard')"><span>Home Dashboard</span></li>
+            <li class="nav-item" onclick="switchMainSection('topic1')"><span>1. Social Groups</span></li>
+            <li class="nav-item" onclick="switchMainSection('topic2')"><span>2. Social Problems</span></li>
+            <li class="nav-item" onclick="switchMainSection('topic3')"><span>3. Control & Order</span></li>
+            <li class="nav-item" onclick="switchMainSection('topic4')"><span>4. Conflict Resolution</span></li>
+            <li class="nav-item" onclick="switchMainSection('topic5')"><span>5. Diversity & Cohesion</span></li>
+            <!-- New Navigation Target Module -->
+            <li class="nav-item" onclick="switchMainSection('sociologyAnalysis')"><span>6. Sociology Analysis</span></li>
+            <li class="nav-item" onclick="switchMainSection('cramMode')"><span>⚡ Exam Cram Mode</span></li>
+            <li class="nav-item" onclick="switchMainSection('survivalGuide')"><span>🏆 Survival Guide</span></li>
+        </ul>
+    </aside>
+
+    <!-- Core Viewport Window -->
+    <main>
+        <div class="top-bar">
+            <div class="search-box">
+                <input type="text" id="globalSearch" placeholder="Search notes by typing..." onkeyup="handleGlobalSearch()">
+            </div>
+            <div>
+                <button class="option-btn" style="padding:0.5rem 1rem;" onclick="resetTracking()">Reset Progress</button>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTAINER -->
+        <div id="dashboard" class="content-section active-section">
+            <div class="dashboard-grid">
+                <div class="welcome-card">
+                    <h1>Fong's Socio Guide</h1>
+                    <p>for the real friends</p>
+                    <div class="quote-box">"Reinaallddd >...<"</div>
+                </div>
+                <div class="tracker-card">
+                    <h3>Your Study Progress</h3>
+                    <div class="progress-circle-container">
+                        <div class="progress-text" id="completionPercentage">0%</div>
+                    </div>
+                    <p style="text-align: center; color: var(--text-muted);">Calculated based on active topic interactions and engagement.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom:1.5rem;">Core Sociological Modules</h3>
+            <div class="grid-3">
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('topic1')">
+                    <h4>1. Social Groups</h4>
+                    <p>Primary, secondary, formal, and internal group dynamics.</p>
+                </div>
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('topic2')">
+                    <h4>2. Social Problems</h4>
+                    <p>Poverty, structural crime, inequality, and institutional failures.</p>
+                </div>
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('topic3')">
+                    <h4>3. Control & Order</h4>
+                    <p>Deviance management, norms, laws, and societal alignment metrics.</p>
+                </div>
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('topic4')">
+                    <h4>4. Conflict Resolution</h4>
+                    <p>Class struggle, systemic friction, arbitration, and mediation protocols.</p>
+                </div>
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('topic5')">
+                    <h4>5. Cohesion Dynamics</h4>
+                    <p>Pluralism, multiculturalism, and structural harmony defense parameters.</p>
+                </div>
+                <!-- Interactive Dashboard Integration Block -->
+                <div class="metric-card" style="cursor:pointer;" onclick="switchMainSection('sociologyAnalysis')">
+                    <h4>6. Sociology Analysis</h4>
+                    <p>Interactive evaluative questions, multi-tier MCQs, and sample essays.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOPIC 1: THE DEVELOPMENT OF SOCIAL GROUP -->
+        <div id="topic1" class="content-section">
+            <div class="topic-header">
+                <h2>The Development of Social Group</h2>
+            </div>
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 't1-notes')">Full Notes</button>
+                <button class="tab-btn" onclick="switchTab(this, 't1-flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="switchTab(this, 't1-quiz')">Interactive Quiz</button>
+            </div>
+
+            <div id="t1-notes" class="tab-content active">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">A. Comprehensive Academic Notes <span>+</span></div>
+                    <div class="accordion-body">
+                        <h3>1. Exhaustive Definition</h3>
+                        <p>A <strong>social group</strong> consists of two or more individuals who engage in recurrent, patterned interaction, share an explicit consciousness of kind (belonging), and align their actions according to mutually acknowledged statuses and roles. It is structurally distinct from a <em>social aggregate</em> (a physical gathering lacking structured interaction, like commuters waiting for a bus) and a <em>social category</em> (a statistical classification sharing a trait, like all left-handed individuals).</p>
+                        
+                        <h3>2. Deep Dive: Typologies of Social Groups</h3>
+                        <ul>
+                            <li><strong>Primary Group:</strong> Small, enduring, characterized by face-to-face intimacy, strong emotional bonds, and informal control. They serve as primary agents of socialization (e.g., nuclear family, close childhood friends).</li>
+                            <li><strong>Secondary Group:</strong> Large, impersonal, task-oriented, short-term, and functionally transactional. Built on instrumental relationships rather than deep sentiment (e.g., corporate workforce, labor union).</li>
+                            <li><strong>Formal Group:</strong> Explicitly organized with codified rules, rigid hierarchies, structural objectives, and officially designated status tracking (e.g., school administrative body, military platoon).</li>
+                            <li><strong>Informal Group:</strong> Formed spontaneously out of personal affinity, lacking rigid written guidelines or institutional frameworks (e.g., lunchtime student study circle).</li>
+                            <li><strong>In-Group vs. Out-Group:</strong> An <em>In-Group</em> is a collective toward which an individual experiences intense psychological loyalty, security, and a sense of "we." An <em>Out-Group</em> is the targeted opposition toward which members feel competitiveness, exclusion, or active hostility.</li>
+                            <li><strong>Reference Group:</strong> A social unit utilized as a fundamental benchmark for evaluating one's personal values, behavior, achievement metrics, and identity formulation (e.g., an aspiring student looking up to professional software developers).</li>
+                        </ul>
+
+                        <h3>3. Group Formation Process & Dynamics</h3>
+                        <p><strong>Bruce Tuckman’s Process Model:</strong> Groups form through a highly structural evolutionary pipeline: 
+                        <br>1. <em>Forming</em> (orientation, boundary assessment), 
+                        <br>2. <em>Storming</em> (status conflicts, ideological friction), 
+                        <br>3. <em>Norming</em> (cohesion established, rules fixed), 
+                        <br>4. <em>Performing</em> (coordinated target execution), and 
+                        <br>5. <em>Adjourning</em> (task completion, structural unlinking).</p>
+                        <p><strong>Social Interaction & Network Structures:</strong> Human interaction relies on symbolic interpretation. As size shifts from a <em>dyad</em> (two people, highly intense but fragile) to a <em>triad</em> (three people, structural stability increases, allows for mediation or shifting coalitions), internal dynamics drastically alter.</p>
+
+                        <div class="callout tip">
+                            <strong>Exam Tip:</strong> Teachers love testing <strong>Groupthink</strong> (faulty, conformity-driven decision-making to protect group harmony) during the Performing phase. Watch out for questions where a group skips evaluating critical alternatives!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">B. "What My Teacher Might Ask" <span>+</span></div>
+                    <div class="accordion-body">
+                        <p><strong>Concept 1: Aggregates vs. Groups</strong><br><em>Question Type: Multiple Choice</em><br>If passengers on a stranded airplane begin organizing a survival system, assigning roles, and developing a shared identity, they have transitioned from a:<br>A) Social Category to a Reference Group<br>B) Social Aggregate to a Social Group<br>C) In-Group to an Out-Group<br><strong>Correct Answer: B</strong></p>
+                        <p><strong>Concept 2: Reference Group Functions</strong><br><em>Question Type: True/False</em><br>An individual must belong to a reference group for it to heavily influence their choices. (<strong>Answer: False.</strong> Reference groups can be aspirational—you don't have to be a member to use them as an identity benchmark).</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">C. Common Mistakes & Misconceptions <span>+</span></div>
+                    <div class="accordion-body">
+                        <div class="callout danger">
+                            <strong>The Trap:</strong> Assuming primary groups are always positive and secondary groups are negative. Primary groups can exert massive, unhealthy pressure (e.g., toxic peer groups), while secondary groups are essential tools for economic and professional achievement.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">D. Quick Revision Summary <span>+</span></div>
+                    <div class="accordion-body">
+                        <p>• <strong>Social Group:</strong> Interdependent, interacting individuals with a shared identity.<br>• <strong>Primary/Secondary:</strong> Intimate/Emotional vs. Impersonal/Goal-driven.<br>• <strong>Tuckman's Stages:</strong> Forming -> Storming -> Norming -> Performing -> Adjourning.<br>• <strong>Keywords:</strong> Dyad, Triad, Groupthink, Consciousness of Kind, Aggregate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t1-flashcards" class="tab-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Social Group vs. Aggregate</div>
+                            <div class="flashcard-back">A group features patterned interaction and shared structural identity. An aggregate is a mere physical collection sharing space without interactive structures.</div>
+                        </div>
+                    </div>
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Reference Group</div>
+                            <div class="flashcard-back">A social cluster used as an internal psychological model and benchmark for evaluating personal choices and self-worth.</div>
+                        </div>
+                    </div>
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Groupthink</div>
+                            <div class="flashcard-back">A psychological and structural pathology where the intense drive for consensus overrides rational, critical evaluation of decisions.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t1-quiz" class="tab-content">
+                <div class="quiz-box" id="quiz-t1"></div>
+            </div>
+        </div>
+
+        <!-- TOPIC 2: SOCIAL PROBLEM -->
+        <div id="topic2" class="content-section">
+            <div class="topic-header">
+                <h2>Social Problem</h2>
+            </div>
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 't2-notes')">Full Notes</button>
+                <button class="tab-btn" onclick="switchTab(this, 't2-flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="switchTab(this, 't2-quiz')">Interactive Quiz</button>
+            </div>
+
+            <div id="t2-notes" class="tab-content active">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">A. Comprehensive Academic Notes <span>+</span></div>
+                    <div class="accordion-body">
+                        <h3>1. Exhaustive Definition</h3>
+                        <p>A <strong>social problem</strong> is an institutional or behavioral condition that disrupts the equilibrium of a social system, affecting a significant sector of the population. It is verified through two main metrics: the <em>objective dimension</em> (empirical, statistical verification of the harm) and the <em>subjective dimension</em> (widespread public consensus that the condition is unacceptably unfair and requires structural intervention).</p>
+                        
+                        <h3>2. Deep Dive: Core Structural Problems</h3>
+                        <ul>
+                            <li><strong>Poverty:</strong> Analyzed as <em>Absolute Poverty</em> (life-threatening absence of core survival assets like food, shelter, clean water) vs. <em>Relative Poverty</em> (deprivation calculated in relation to the average economic standard of the surrounding community).</li>
+                            <li><strong>Crime & Juvenile Delinquency:</strong> Caused by systemic strain rather than individual moral failures. Driven by institutional blockages in access to resources and structural opportunities.</li>
+                            <li><strong>Unemployment & Social Inequality:</strong> Structural imbalances in training, resources, and automation that create long-term marginalization for specific socioeconomic layers.</li>
+                            <li><strong>Drug Abuse & Family Problems:</strong> Manifestations of underlying social dislocation and structural instability, rather than purely isolated personal choices.</li>
+                        </ul>
+
+                        <h3>3. Structural Explanations & Solutions</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Theoretical Paradigm</th>
+                                    <th>Root Cause Explanation</th>
+                                    <th>Systemic Solution Model</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Structural Functionalism</strong></td>
+                                    <td>Temporary breakdown of institutions; rapid social changes leading to <em>Anomie</em> (normlessness).</td>
+                                    <td>Reinforce social institutions (family, schools) to re-establish stability and shared norms.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Conflict Theory</strong></td>
+                                    <td>Systemic exploitation by dominant classes using resource monopolies to secure wealth.</td>
+                                    <td>Structural overhaul of resource access; redistribution policies.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Symbolic Interactionism</strong></td>
+                                    <td>Stigmatizing labels applied by authority bodies, creating self-fulfilling prophecies.</td>
+                                    <td>Reframe regulatory labels; change social definitions of deviance.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">B. "What My Teacher Might Ask" <span>+</span></div>
+                    <div class="accordion-body">
+                        <p><strong>Concept: Absolute vs. Relative Deprivation</strong><br><em>Question Type: Multiple Choice</em><br>A family has access to housing, basic food, and plumbing, but lacks funds for a personal vehicle, internet connectivity, or healthcare access compared to most citizens in their city. They are experiencing:<br>A) Absolute Poverty<br>B) Institutional Strain<br>C) Relative Poverty<br><strong>Correct Answer: C</strong></p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">C. Common Mistakes & Misconceptions <span>+</span></div>
+                    <div class="accordion-body">
+                        <div class="callout danger">
+                            <strong>The Trap:</strong> Explaining structural systemic issues by focusing entirely on individual traits (e.g., "crime happens because individuals choose to be lazy"). Always use macro-structural analysis (e.g., school funding disparities, labor market access, poverty indices) in your sociology essays.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">D. Quick Revision Summary <span>+</span></div>
+                    <div class="accordion-body">
+                        <p>• <strong>Social Problem:</strong> Harmful societal conditions with empirical proof and public push for reform.<br>• <strong>Anomie:</strong> Disorientation and normlessness when social transitions happen too quickly.<br>• <strong>Keywords:</strong> Objective Dimension, Subjective Dimension, Strain Theory, Absolute Poverty, Institutional Deficit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t2-flashcards" class="tab-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Absolute Poverty</div>
+                            <div class="flashcard-back">A severe lack of life-sustaining physical assets (clean food, shelter, clothing). This condition is life-threatening.</div>
+                        </div>
+                    </div>
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Anomie</div>
+                            <div class="flashcard-back">Robert Merton and Emile Durkheim's concept of normlessness resulting from structural shifts, leading to systemic instability.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t2-quiz" class="tab-content">
+                <div class="quiz-box" id="quiz-t2"></div>
+            </div>
+        </div>
+
+        <!-- TOPIC 3: SOCIAL CONTROL AND ORDER -->
+        <div id="topic3" class="content-section">
+            <div class="topic-header">
+                <h2>Social Control and Order</h2>
+            </div>
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 't3-notes')">Full Notes</button>
+                <button class="tab-btn" onclick="switchTab(this, 't3-flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="switchTab(this, 't3-quiz')">Interactive Quiz</button>
+            </div>
+
+            <div id="t3-notes" class="tab-content active">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">A. Comprehensive Academic Notes <span>+</span></div>
+                    <div class="accordion-body">
+                        <h3>1. Exhaustive Definition</h3>
+                        <p><strong>Social Order</strong> represents the stable, predictable, and functional arrangement of institutionalized relationships and behaviors within a society. <strong>Social Control</strong> is the system of structural mechanisms, strategies, and regulatory sanctions designed to encourage conformity to established norms and manage deviance.</p>
+
+                        <h3>2. Deep Dive: Sanctions & Norm Hierarchies</h3>
+                        <p>Societies enforce order using a complex combination of <strong>Sanctions</strong> (positive vs. negative rewards or punishments) distributed through formal or informal channels:</p>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Sanction Type</th>
+                                    <th>Formal Channel (Institutionalized)</th>
+                                    <th>Informal Channel (Spontaneous)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Positive (+)</strong></td>
+                                    <td>Academic awards, promotions, official honors.</td>
+                                    <td>A smile, supportive praise, inclusion.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Negative (-)</strong></td>
+                                    <td>Fines, arrest, school suspension.</td>
+                                    <td>Gossip, cold looks, peer exclusion.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>The Social Norm Hierarchy:</h4>
+                        <ul>
+                            <li><strong>Folkways:</strong> Interpersonal customs regulating daily behavior and etiquette (e.g., basic table manners). Breaking them leads to minor awkwardness or side-glances.</li>
+                            <li><strong>Mores:</strong> Deeply held moral expectations critical to group well-being (e.g., rules against theft or lying). Breaking them sparks strong moral outrage.</li>
+                            <li><strong>Laws:</strong> Codified formal norms explicitly written down and enforced by specific legal institutions.</li>
+                        </ul>
+
+                        <h3>3. Deviance & Management Mechanisms</h3>
+                        <p><strong>Deviance</strong> is any behavior or condition that violates a group's established cultural norms. Deviance is relative; it changes based on history, subcultures, and context.</p>
+                        <div class="callout tip">
+                            <strong>Exam Tip:</strong> Functionalists argue that a baseline level of deviance is actually useful because it clarifies moral rules, builds group unity when dealing with rulebreakers, and can trigger positive social change.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">B. "What My Teacher Might Ask" <span>+</span></div>
+                    <div class="accordion-body">
+                        <p><strong>Concept: Norm Classification</strong><br><em>Question Type: True/False</em><br>Showing up to a formal job interview in casual athletic clothing is a direct violation of societal mores. (<strong>Answer: False.</strong> This is a violation of a folkway—bad etiquette—not a core moral rule or law).</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">C. Common Mistakes & Misconceptions <span>+</span></div>
+                    <div class="accordion-body">
+                        <div class="callout danger">
+                            <strong>The Trap:</strong> Assuming formal control is always more powerful than informal control. In daily life, informal control—like the fear of being judged or excluded by your peers—is often a much stronger regulator of human behavior than official laws.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">D. Quick Revision Summary <span>+</span></div>
+                    <div class="accordion-body">
+                        <p>• <strong>Social Order:</strong> The predictable patterns that keep society stable.<br>• <strong>Norms Sequence:</strong> Folkways (customs) -> Mores (morals) -> Laws (codified).<br>• <strong>Keywords:</strong> Positive Sanctions, Negative Sanctions, Deviance Relativity, Moral Boundaries.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t3-flashcards" class="tab-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Folkways vs. Mores</div>
+                            <div class="flashcard-back">Folkways guide informal, everyday etiquette with light consequences. Mores cover deep moral expectations that trigger strong public outrage if violated.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t3-quiz" class="tab-content">
+                <div class="quiz-box" id="quiz-t3"></div>
+            </div>
+        </div>
+
+        <!-- TOPIC 4: SOCIAL CONFLICT AND CONFLICT RESOLUTION -->
+        <div id="topic4" class="content-section">
+            <div class="topic-header">
+                <h2>Social Conflict and Conflict Resolution</h2>
+            </div>
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 't4-notes')">Full Notes</button>
+                <button class="tab-btn" onclick="switchTab(this, 't4-flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="switchTab(this, 't4-quiz')">Interactive Quiz</button>
+            </div>
+
+            <div id="t4-notes" class="tab-content active">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">A. Comprehensive Academic Notes <span>+</span></div>
+                    <div class="accordion-body">
+                        <h3>1. Exhaustive Definition</h3>
+                        <p><strong>Social Conflict</strong> is a purposeful struggle between individuals or groups to secure scarce resources, redistribute power, or assert dominant values over rivals. In this interaction, competing sides work to neutralize, weaken, or block their opponents.</p>
+
+                        <h3>2. Deep Dive: Typologies of Conflict</h3>
+                        <ul>
+                            <li><strong>Class Conflict:</strong> Structural friction between economic layers (e.g., owners of capital vs. wage laborers, as analyzed by Karl Marx).</li>
+                            <li><strong>Ethnic & Religious Conflict:</strong> Disputes over cultural dominance, regional control, or institutional recognition between distinct communities.</li>
+                            <li><strong>Individual vs. Group Disagreement:</strong> Ranging from small interpersonal office disputes to massive, organized labor strikes.</li>
+                        </ul>
+
+                        <h3>3. Resolution Frameworks Matrix</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Resolution Protocol</th>
+                                    <th>Operational Definition</th>
+                                    <th>Authority & Binding Properties</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Negotiation</strong></td>
+                                    <td>Direct dialogue between parties to reach a joint settlement without outside intervention.</td>
+                                    <td>Non-binding unless signed into a legal civil contract.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mediation</strong></td>
+                                    <td>A neutral third party guides discussion and suggests compromise options.</td>
+                                    <td>Voluntary; the mediator has no power to impose a ruling.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Arbitration</strong></td>
+                                    <td>An independent third party evaluates evidence from both sides and issues a final decision.</td>
+                                    <td><strong>Legally binding</strong> and enforceable by law.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Compromise</strong></td>
+                                    <td>A settlement where each side gives up part of their original demands.</td>
+                                    <td>Mutually dependent on both sides cooperating.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Reconciliation</strong></td>
+                                    <td>A deep process focused on rebuilding trust and broken relationships, rather than just transactional terms.</td>
+                                    <td>Purely relational and emotional.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">B. "What My Teacher Might Ask" <span>+</span></div>
+                    <div class="accordion-body">
+                        <p><strong>Concept: Third-Party Differences</strong><br><em>Question Type: Multiple Choice</em><br>If a strike is halted because an outside legal specialist hears both arguments and issues a final, mandatory ruling that legally binds both sides, this process is called:<br>A) Mediation<br>B) Negotiation<br>C) Arbitration<br><strong>Correct Answer: C</strong></p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">C. Common Mistakes & Misconceptions <span>+</span></div>
+                    <div class="accordion-body">
+                        <div class="callout danger">
+                            <strong>The Trap:</strong> Confusing Mediation with Arbitration. Remember: A mediator can only guide the conversation and suggest solutions. An arbitrator acts like a private judge—their final decision is legally binding and must be followed.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">D. Quick Revision Summary <span>+</span></div>
+                    <div class="accordion-body">
+                        <p>• <strong>Conflict:</strong> A struggle over scarce resources, power, or values.<br>• <strong>Arbitration:</strong> A binding, mandatory third-party ruling.<br>• <strong>Mediation:</strong> A voluntary, guided third-party discussion.<br>• <strong>Keywords:</strong> Class Struggle, Scarce Resources, Compromise, Reconciliation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t4-flashcards" class="tab-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Mediation vs. Arbitration</div>
+                            <div class="flashcard-back">Mediation is a voluntary, non-binding guided discussion. Arbitration is an independent evaluation that ends in a legally binding ruling.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t4-quiz" class="tab-content">
+                <div class="quiz-box" id="quiz-t4"></div>
+            </div>
+        </div>
+
+        <!-- TOPIC 5: DIVERSITY, SOCIAL HARMONY AND COHESION -->
+        <div id="topic5" class="content-section">
+            <div class="topic-header">
+                <h2>Diversity, Social Harmony and Cohesion</h2>
+            </div>
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 't5-notes')">Full Notes</button>
+                <button class="tab-btn" onclick="switchTab(this, 't5-flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="switchTab(this, 't5-quiz')">Interactive Quiz</button>
+            </div>
+
+            <div id="t5-notes" class="tab-content active">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">A. Comprehensive Academic Notes <span>+</span></div>
+                    <div class="accordion-body">
+                        <h3>1. Exhaustive Definition</h3>
+                        <p><strong>Diversity</strong> is the co-existence of different social identities—such as ethnicity, culture, religion, and socio-economic background—within a single social ecosystem. <strong>Social Cohesion</strong> measures the strength of connections, mutual trust, and shared values that hold a community together. <strong>Social Harmony</strong> is a state of peaceful interaction where different groups cooperate without letting tensions slide into open conflict.</p>
+
+                        <h3>2. Deep Dive: Conceptual Systems Matrix</h3>
+                        <ul>
+                            <li><strong>Pluralism:</strong> A system where diverse groups keep their unique cultural traits, but maintain equal social standing and access to the shared political framework.</li>
+                            <li><strong>Multiculturalism:</strong> A policy approach that officially celebrates diversity and encourages equal respect for all cultural traditions, contrasting with <em>assimilation</em> (which pressures minorities to drop their heritage and adopt the dominant culture).</li>
+                            <li><strong>Particularism:</strong> The tendency to prioritize the narrow interests of your own subculture or group over the broader needs of society. If left unmanaged, it can undermine social cohesion.</li>
+                        </ul>
+
+                        <h3>3. Structural Barriers & Harmony Maintenance</h3>
+                        <p>Cohesion is primarily threatened by <strong>Discrimination</strong> (unjust action/treatment) which stems from <em>Prejudice</em> (rigid, biased internal thoughts) and can become built into organizations as <em>Institutional Discrimination</em> (unfair practices embedded within schools, banks, or courts).</p>
+                        <p>Societies maintain harmony by enforcing civil rights laws, ensuring equal economic access, and encouraging dialogue that builds social capital across different communities.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">B. "What My Teacher Might Ask" <span>+</span></div>
+                    <div class="accordion-body">
+                        <p><strong>Concept: Prejudice vs. Discrimination</strong><br><em>Question Type: True/False</em><br>An employer who holds negative personal biases against an ethnic minority group but still hires them based on merit is demonstrating discrimination. (<strong>Answer: False.</strong> They are demonstrating prejudice (internal thought), but not discrimination (the outward action)).</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">C. Common Mistakes & Misconceptions <span>+</span></div>
+                    <div class="accordion-body">
+                        <div class="callout danger">
+                            <strong>The Trap:</strong> Using the terms Prejudice and Discrimination interchangeably on your exams. Remember: Prejudice is a internal, hidden mental attitude. Discrimination is the external, observable unfair behavior.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">D. Quick Revision Summary <span>+</span></div>
+                    <div class="accordion-body">
+                        <p>• <strong>Social Cohesion:</strong> The level of trust and mutual connection holding a community together.<br>• <strong>Pluralism:</strong> Distinct cultural groups keeping their identities while enjoying equal social power.<br>• <strong>Keywords:</strong> Multiculturalism, Particularism, Inclusion, Institutional Bias, Assimilation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t5-flashcards" class="tab-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">Prejudice vs. Discrimination</div>
+                            <div class="flashcard-back">Prejudice is a rigid, biased internal mental attitude. Discrimination is the actual outward action or unfair treatment of a group.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t5-quiz" class="tab-content">
+                <div class="quiz-box" id="quiz-t5"></div>
+            </div>
+        </div>
+
+        <!-- NEW MODULE WORKSPACE VIEWPORT: 6. SOCIOLOGY ANALYSIS -->
+        <div id="sociologyAnalysis" class="content-section">
+            <div class="topic-header">
+                <h2>6. Sociology Analysis</h2>
+                <p>Advanced evaluative assessment paradigms mapping interactive parameters across True/False matrices, advanced multi-choice problems, and target essay evaluations.</p>
+            </div>
+            
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchTab(this, 'sa-truefalse')">Section I: True / False</button>
+                <button class="tab-btn" onclick="switchTab(this, 'sa-mcq')">Section II: Multiple Choice</button>
+                <button class="tab-btn" onclick="switchTab(this, 'sa-essay')">Section III: Essay Prompts</button>
+            </div>
+
+            <!-- SUB-TAB 1: True / False Components -->
+            <div id="sa-truefalse" class="tab-content active">
+                <p class="section-intro">Select True or False to verify your structural option and inspect analytical answers.</p>
+                <div class="quiz-box">
+                    
+                    <!-- Q1 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">1. Neo-colonialism describes a situation where a former colony maintains political independence, but its economy remains dominated by foreign corporations and a small local elite.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Neo-colonialism refers to geopolitical practices where powerful states or foreign corporations use economic, political, or cultural pressures to control developing nations. Even with a sovereign government, resources are extracted externally, often facilitated by a small local elite.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="analysis-card-item" data-tf-correct="false">
+                        <p class="quiz-question">2. The primary sociological goal of the "Divide and Rule" tactic in imperialist societies is to foster cultural diffusion and religious integration.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: FALSE.</strong> The goal of "Divide and Rule" (<em>divide et impera</em>) is the opposite of integration. It is an intentional strategy designed to fracture larger concentrations of power into weaker fragments, deliberately fueling ethnic or religious divides to prevent a unified uprising.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">3. Social change driven by the transition to biogas in response to a global oil crisis is an example of society adapting to changes in the natural and geopolitical environment.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> This scenario perfectly illustrates environmental and geopolitical adaptation. The depletion or restriction of a resource forces human society to innovate and shift its infrastructural habits toward alternative energy, fundamentally altering daily societal functions.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">4. Intersectionality is a framework that analyzes how overlapping systems of oppression, such as race, class, and gender, create unique experiences of discrimination for individuals.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Coined by Kimberlé Crenshaw, intersectionality highlights that social identities do not exist independently of each other. Instead, they overlap to create complex, intersecting systems of discrimination that cannot be understood by looking at single factors in isolation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">5. Hegemonic masculinity refers to a social structure that justifies the subordination of women and marginalizes non-conforming expressions of manhood.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> In gender theory, hegemonic masculinity is the idealized, dominant form of manhood within a society's gender hierarchy. It legitimizes the global subordination of women and actively marginalizes men who do not fit the hyper-masculine, emotionally detached archetype.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="analysis-card-item" data-tf-correct="false">
+                        <p class="quiz-question">6. If a generic "women's leadership" program treats all female employees as having identical barriers, it is successfully applying the concept of intersectionality.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: FALSE.</strong> This is a failure of intersectionality. By treating all women identically, the program ignores how women of color, working-class women, or queer women face distinctly compounded institutional barriers compared to wealthy, dominant-demographic women.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">7. Particularism occurs when a social group limits participation in certain activities to members of a specific religion or culture, often excluding the minority from power.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Particularism is the practice of applying unique standards or rights to a specific group rather than universally. When tied to power dynamics, it results in an in-group hoarding resources or political access, shutting out minorities.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">8. Pluralism is a social pattern where various cultural groups interact and share traditions while maintaining and respecting their distinct differences.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Unlike assimilation (where minorities give up their culture), pluralism functions like a "salad bowl." Different ethnic and cultural groups coexist peacefully, participate equally in the broader society, and retain their distinct cultural identities with mutual respect.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q9 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">9. Diffusion is the term used to describe the spread of knowledge, ideas, and innovations from one social group to another, often facilitated by the internet.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Cultural diffusion is the social process through which cultural traits, technologies, and practices spread from one society or social group to another. Digital spaces and the internet have exponentially accelerated this process globally.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">10. According to the application of Conflict Theory, "Cultural Capital" refers to the non-financial social assets (like education and norms) that can promote or hinder social mobility.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Pierre Bourdieu’s concept of cultural capital fits seamlessly into conflict theory. It argues that dominant classes pass down non-financial assets (etiquette, elite education, dialects) that institutions reward, maintaining class boundaries and reproducing inequality.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q11 -->
+                    <div class="analysis-card-item" data-tf-correct="true">
+                        <p class="quiz-question">11. In the context of community empowerment, providing counseling and guidance is an effective systemic way to overcome a lack of public awareness regarding productive work groups.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: TRUE.</strong> Counseling and structured guidance act as key educational interventions. In community development, targeted guidance breaks down mental barriers, builds confidence, and fosters public awareness systematically to help form productive work groups.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q12 -->
+                    <div class="analysis-card-item" data-tf-correct="false">
+                        <p class="quiz-question">12. A "poverty trap" is solely the result of individual laziness and has no connection to the lack of access to education or economic consciousness.</p>
+                        <div class="options-group">
+                            <button class="option-btn" onclick="evaluateTF(this, 'true')">True</button>
+                            <button class="option-btn" onclick="evaluateTF(this, 'false')">False</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: FALSE.</strong> A poverty trap is a structural mechanism that makes it nearly impossible for individuals to escape poverty. It is caused by systemic failures—such as a lack of capital, underfunded schools, and poor healthcare—not individual moral failures.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SUB-TAB 2: Advanced MCQs Components -->
+            <div id="sa-mcq" class="tab-content">
+                <p class="section-intro">Select the best option to evaluate systemic answer parameters and feedback fields.</p>
+                <div class="quiz-box">
+                    
+                    <!-- MCQ 1 -->
+                    <div class="analysis-card-item" data-mcq-correct="D">
+                        <p class="quiz-question">1. Integration is defined as the process by which diverse elements within a society adjust to form a unified culture. Which of the following describes how integration manifests in a society?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Recognizing individual political and civil rights.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Groups coexist, maintaining distinct cultures.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Valuing the diversity of groups over a common way of life.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. The development of a unified cultural system through assimilation.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Social gap of groups leading to isolation.</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: D.</strong> The question specifically defines integration as forming a <em>unified culture</em>. While options like B describe pluralism, only option D explicitly targets the creation of a unified cultural system via assimilation, where different groups merge together over time.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div class="analysis-card-item" data-mcq-correct="D">
+                        <p class="quiz-question">2. Television programs, social media feeds, and public service announcements subtly promote images of the “ideal” social harmony for society as people who are always physically fit, consume only local products, maintain a spotless home, and participate in community activities.<br>Which of the following social controls below is a reflection of this value?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Prevention</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Coercion</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Persuasive</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Pervasion</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Compulsion</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: D.</strong> <em>Pervasion</em> (cultural saturation) occurs when values or norms are so deeply embedded and consistently repeated throughout media and institutions that individuals unconsciously internalize them as the objective ideal. It operates as an atmospheric, constant presence.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div class="analysis-card-item" data-mcq-correct="C">
+                        <p class="quiz-question">3. A well-functioning society often seeks to strike a balance between maintaining order and allowing for change. Social change, which requires a mechanism in doing so, which mechanism helps to maintain social order, <strong>except</strong> …</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Power</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Consciousness</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Role</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Ideology</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Agreement</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: C.</strong> Power, consciousness, ideology, and agreements are active socio-political <em>mechanisms</em> used to govern or stabilize structural changes. A "role" is simply an individual structural position or expected behavior within society; it is a social unit rather than an institutional transition mechanism.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div class="analysis-card-item" data-mcq-correct="C">
+                        <p class="quiz-question">4. Which of the following is not an example of repressive social control?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Military training involves leadership and discipline.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Littering is penalized with fines.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Establishing recreational training programs</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Drug dealers receive prison sentences.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Students should be punished after skipping classes.</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: C.</strong> Repressive social control relies on punishment, penalties, and coercion to correct deviant behavior <em>after</em> it occurs. Options A, B, D, and E all involve a form of punitive discipline. Option C is a preventative or rehabilitative measure aimed at community support.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 5 -->
+                    <div class="analysis-card-item" data-mcq-correct="D">
+                        <p class="quiz-question">5. To address the issues after a conflict that caused loss of life, government officials chose persuasive social control, believing it would be more effective in stopping the conflict.<br><br><strong>CAUSED</strong><br><br>The core of persuasive social control is a collaborative method that relies on dialogue.</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Statement is correct, reason is correct, both show a cause-and-effect relationship.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Statement is correct, reason is correct, but do not show a cause-and-effect relationship.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Statement is correct and the reason is incorrect.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Statement is incorrect and the reason is correct.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Both the statement and the reason are incorrect.</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: D.</strong> The initial statement is sociologically incorrect because persuasive control is typically ineffective immediately following a volatile conflict involving loss of life; such crisis situations require coercive or repressive control to enforce immediate safety. However, the reason provided is a completely accurate definition of what persuasive control is.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 6 -->
+                    <div class="analysis-card-item" data-mcq-correct="E">
+                        <p class="quiz-question">6. Standards seen as common goals become institutionalized through socialization. Which social control method becomes institutionalized as part of how society functions on social control?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Coercion</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Social gap</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Persuasion</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Prevention</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Pervasion</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: E.</strong> For a value to become fully institutionalized through lifelong socialization, it must saturate the environment until it is taken for granted. <em>Pervasion</em> is the method through which societal expectations seamlessly weave into customs and institutional structures, ensuring social control operates continuously without physical force.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 7 -->
+                    <div class="analysis-card-item" data-mcq-correct="E">
+                        <p class="quiz-question">7. Which of the following describes anomie’s role in providing establishment social control in society?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Strengthening social values and norms</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Cultural factors that promote social change</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Create social changes and innovation</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Clarifying social boundaries</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Breakdown of societal norms that result in fear</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: E.</strong> Anomie (Émile Durkheim) is a state of normlessness where traditional rules break down. When anomie occurs, the resulting chaos and fear often shock a society into realizing it needs clear limits, inadvertently mobilizing the population to re-establish stricter social controls.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 8 -->
+                    <div class="analysis-card-item" data-mcq-correct="B">
+                        <p class="quiz-question">8. The government’s efforts to establish a free school program and provide opportunities for underprivileged and high-achieving students to receive scholarships is a form of meritocracy. Based on this illustration, which government action demonstrates an effort to achieve social harmony?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Providing independency on society</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Recognizing the rights of every person</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Giving attention to children as future worker</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Respecting the beliefs of others</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Separating responsibility based on ageism</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: B.</strong> Meritocracy through free education functions on the principle that every individual, regardless of socioeconomic background, has a fundamental civil right to equal opportunity. By recognizing and validating this right, the government bridges divides and fosters social harmony.</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 9 -->
+                    <div class="analysis-card-item" data-mcq-correct="A">
+                        <p class="quiz-question">9. Assimilation and acculturation in a plural society can create social integration.<br><br><strong>CAUSED</strong><br><br>Social integration is created when society can build a common consensus.</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Statement is correct, reason is correct, both show a cause-and-effect relationship.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Statement is correct, reason is correct, but do not show a cause-and-effect relationship.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Statement is correct and the reason is incorrect.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Statement is incorrect and the reason is correct.</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Both the statement and the reason are incorrect.</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: A.</strong> Assimilation and acculturation are processes where differing groups adapt to minimize friction, leading to social integration (Statement is true). They accomplish this because these adaptation processes allow society to build a shared value system and common consensus (Reason is true, and directly explains the statement).</p>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 10 -->
+                    <div class="analysis-card-item" data-mcq-correct="A">
+                        <p class="quiz-question">10. Ethnic conflicts in certain areas between indigenous people and immigrants occur because a number of immigrant residents dominate several aspects of life in an unfavorable way. Which of these efforts can be made to create a harmonious multicultural society in the area?</p>
+                        <div class="options-vertical">
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'A')">A. Eliminating resentment between members of society</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'B')">B. Reaching agreement in society through coercion</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'C')">C. Creating social inequality by force by the state</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'D')">D. Creating social interaction by force by the state</button>
+                            <button class="option-btn" onclick="evaluateMCQ(this, 'E')">E. Changing the personalities of individuals in conflict</button>
+                        </div>
+                        <div class="quiz-feedback">
+                            <p><strong>Correct Answer: A.</strong> In a multicultural framework, harmony cannot be sustained through state-sponsored force or systemic inequality. True harmony requires addressing the root psychological and social tensions—meaning the community must engage in equity initiatives aimed at systematically eliminating intergroup resentment.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SUB-TAB 3: Essay Grading Matrix Components -->
+            <div id="sa-essay" class="tab-content">
+                <p class="section-intro">Comprehensive theoretical evaluation markers and analytical keys for grading benchmarks.</p>
+                
+                <div class="analysis-card-item">
+                    <p class="quiz-question" style="color: var(--accent-hover); font-size:1.2rem;">Question 1: Explain what is meant by diversity.</p>
+                    <div class="essay-response-box">
+                        <strong>Exemplar Key Marking Criteria Answer:</strong><br>
+                        In a sociological context, <strong>diversity</strong> refers to the co-presence of distinct social, cultural, and demographic characteristics within a single geographic or institutional space. It encompasses differences in race, ethnicity, gender, socioeconomic status, age, physical abilities, religious beliefs, political ideologies, and geographic backgrounds.
+                        <br><br>
+                        Crucially, true diversity goes beyond mere statistical representation; it implies an environment where these varied perspectives are recognized, valued, and integrated into the broader social fabric without requiring minority groups to erase their unique identities.
+                    </div>
+                </div>
+
+                <div class="analysis-card-item">
+                    <p class="quiz-question" style="color: var(--accent-hover); font-size:1.2rem;">Question 2: Find the example of minimum two in real life about how ideologies shape people’s perceptions of fairness and justice, thus contributing to social order.</p>
+                    <div class="essay-response-box">
+                        <strong>Exemplar Key Marking Criteria Answer:</strong><br>
+                        <ol>
+                            <li>
+                                <strong>Example 1: The Ideology of Meritocracy (The "American Dream")</strong><br>
+                                <em>How it shapes perception:</em> This ideology asserts that success is entirely the product of individual hard work and talent. Because people believe this is true, they perceive the resulting unequal distribution of wealth as fair and just—assuming rich people earned it and impoverished people simply didn't try hard enough.<br>
+                                <em>Contribution to social order:</em> By convincing the population that the economic system is naturally fair, it prevents mass civil unrest, strikes, or revolutions against extreme wealth inequality, stabilizing the existing capitalist order.
+                            </li>
+                            <li style="margin-top:1rem;">
+                                <strong>Example 2: Relational Collectivism (e.g., Filial Piety in East Asian Societies)</strong><br>
+                                <em>How it shapes perception:</em> Rooted deeply in Confucian ideology, fairness and justice are viewed through the lens of communal duties, hierarchy, and respecting one's elders and superiors over individual desires. Doing your part for the family or state is considered the ultimate form of justice.<br>
+                                <em>Contribution to social order:</em> This widespread mindset maintains social order by minimizing individualistic rebellion, lowering crime rates, and ensuring high compliance with civic laws and family care structures without requiring heavy-handed military or police presence.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="analysis-card-item">
+                    <p class="quiz-question" style="color: var(--accent-hover); font-size:1.2rem;">Question 3: Embracing diversity means challenging unfair labels and seeing each person as unique. Hence, breaking stereotypes creates space for real connection in society. Explain how will you break stereotypes inside your peer group as a young adult.</p>
+                    <div class="essay-response-box">
+                        <strong>Exemplar Key Marking Criteria Answer:</strong><br>
+                        Breaking stereotypes within a young adult peer group requires moving away from aggressive lecturing and instead focusing on interpersonal accountability and exposing peers to new perspectives through three actionable strategies:
+                        <br><br>
+                        <ul>
+                            <li><strong>Calling In vs. Calling Out:</strong> If a friend makes an offhanded joke or statement rooted in a stereotype, instead of publicly shaming them, I would "call them in" by asking a disarming question like, <em>"What makes you say that?"</em> or <em>"Where did you hear that from?"</em> This forces them to analyze their own bias without instantly getting defensive.</li>
+                            <li><strong>Decentralizing the Narrative:</strong> Peer groups often fall into "echo chambers." I can actively introduce my friends to diverse media, subcultures, or local community events. For instance, recommending a piece of film, music, or literature written by someone from a marginalized background can humanize experiences that my peer group might otherwise view through a stereotyped lens.</li>
+                            <li><strong>Micro-Validations of Individuality:</strong> I would intentionally praise and validate my friends when they express traits that go against rigid societal expectations. If a male friend opens up emotionally, or a friend pursues a career path atypical for their background, celebrating that individuality normalizes non-conforming choices within our social circle, systematically dissolving the stereotypes we hold.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- EXAM CRAM MODE -->
+        <div id="cramMode" class="content-section">
+            <div class="topic-header">
+                <h2>⚡ High-Yield Exam Cram Mode</h2>
+                <p>Essential definitions, vital distinctions, and core summaries condensed for rapid, last-minute review.</p>
+            </div>
+            <div class="grid-3">
+                <div class="metric-card">
+                    <h4>Must-Memorize Systems</h4>
+                    <p><strong>Primary Group:</strong> Intimate, face-to-face, deep connections (Family).</p>
+                    <p><strong>Anomie:</strong> Structural normlessness caused by rapid social shifts.</p>
+                    <p><strong>Arbitration:</strong> Legally binding dispute resolution by an independent third party.</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Vital Distinctions</h4>
+                    <p><strong>Aggregate vs. Group:</strong> Aggregates just share physical space; groups share interaction and identity.</p>
+                    <p><strong>Prejudice vs. Discrimination:</strong> Prejudice is an internal thought; discrimination is an external action.</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Top Exam Defense</h4>
+                    <p>• Mediators cannot force a solution, whereas arbitrators issue binding rulings.</p>
+                    <p>• Baseline deviance can help a society clarify its rules and values.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL EXAM SURVIVAL GUIDE -->
+        <div id="survivalGuide" class="content-section">
+            <div class="topic-header">
+                <h2>🏆 Final Exam Survival Guide</h2>
+                <p>The essential checklist designed to protect your grade from tricky multiple-choice and true/false questions.</p>
+            </div>
+            <div class="welcome-card" style="background:#111827; border-color:var(--border);">
+                <h3>The Strategy Checklist:</h3>
+                <br>
+                <ul>
+                    <li><strong>True/False Trap:</strong> "Deviance is always harmful to society." -> <strong>FALSE</strong>. Baseline deviance reinforces social boundaries and helps drive positive social change.</li>
+                    <li><strong>Marxist Core Concept:</strong> Whenever an exam question mentions scarce resource struggles or economic class friction, connect it directly to <strong>Conflict Theory</strong>.</li>
+                    <li><strong>Cohesion Metric:</strong> High social capital, strong mutual trust, and reliable community support networks are the defining signs of a highly <strong>Cohesive Society</strong>.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Full Quiz Array Matrices
+        const quizData = {
+            t1: [
+                {q: "Which of the following is considered a true social group rather than an aggregate?", o: ["People waiting at a subway platform", "A high school soccer team", "All left-handed people in Europe", "Shoppers in a department store"], a: 1, e: "A sports team features regular interaction, a shared identity, and structured roles, fulfilling the definition of a true social group."},
+                {q: "True or False: A social category is characterized by frequent face-to-face communication.", o: ["True", "False"], a: 1, e: "False. A social category is a statistical classification of people sharing a trait without requiring interaction."},
+                {q: "What type of group functions primarily as an evaluative benchmark for an individual's behavior and values?", o: ["Primary Group", "Secondary Group", "Reference Group", "Informal Group"], a: 2, e: "Reference groups provide the model framework individuals use to guide and assess their own behavior and identity."}
+            ],
+            t2: [
+                {q: "What concept describes a state of normlessness caused by rapid structural shifts in society?", o: ["Conflict", "Anomie", "Particularism", "Labeling"], a: 1, e: "Anomie occurs when rapid social changes outpace society's ability to provide clear moral and behavioral guidelines."},
+                {q: "True or False: Relative poverty refers to a complete lack of basic resources needed to survive.", o: ["True", "False"], a: 1, e: "False. Complete resource deprivation is absolute poverty. Relative poverty measures inequality against the average living standard of a society."}
+            ],
+            t3: [
+                {q: "A teacher's approving nod or a peer's smile represents what type of sanction?", o: ["Formal Positive", "Informal Positive", "Formal Negative", "Informal Negative"], a: 1, e: "Nods and smiles are informal, spontaneous positive rewards delivered through interpersonal connections."},
+                {q: "True or False: Folkways carry severe moral judgment and official punishments if broken.", o: ["True", "False"], a: 1, e: "False. Folkways are everyday customs. Mores and laws carry much more severe moral and official penalties."}
+            ],
+            t4: [
+                {q: "What is the key difference between Mediation and Arbitration?", o: ["Mediation costs more", "An arbitrator's decision is legally binding; a mediator's is not", "Mediation requires courts", "Arbitration is handled without third parties"], a: 1, e: "Arbitrators act as private judges with the power to issue legally binding decisions. Mediators can only facilitate discussion and suggest options."},
+                {q: "True or False: Class conflict is the core focus of Max Weber's structural theories.", o: ["True", "False"], a: 1, e: "False. Systematic class struggle over the means of production is the central foundation of Karl Marx's conflict theory."}
+            ],
+            t5: [
+                {q: "What is the main difference between Prejudice and Discrimination?", o: ["Prejudice is an action; discrimination is a thought", "Prejudice is an internal attitude; discrimination is an external action", "They mean the exact same thing", "Prejudice only occurs in schools"], a: 1, e: "Prejudice is an internal mental bias or attitude. Discrimination is the actual outward action or unfair treatment of a group."}
+            ]
+        };
+
+        let completedTopicsTrack = new Set(JSON.parse(localStorage.getItem('fong_progress')) || []);
+
+        function switchMainSection(targetId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(targetId).classList.add('active-section');
+            
+            document.querySelectorAll('.nav-links .nav-item').forEach(item => item.classList.remove('active'));
+            
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+
+            if (targetId.startsWith('topic') || targetId === 'sociologyAnalysis') {
+                completedTopicsTrack.add(targetId);
+                localStorage.setItem('fong_progress', JSON.stringify([...completedTopicsTrack]));
+                recalcProgress();
+            }
+        }
+
+        function switchTab(btn, tabId) {
+            const menu = btn.parentElement;
+            menu.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const section = menu.parentElement;
+            section.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function toggleAccordion(header) {
+            const body = header.nextElementSibling;
+            const span = header.querySelector('span');
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                span.innerText = "+";
+            } else {
+                body.style.display = "block";
+                span.innerText = "-";
+            }
+        }
+
+        function buildQuizzes() {
+            Object.keys(quizData).forEach(topicKey => {
+                const container = document.getElementById(`quiz-${topicKey}`);
+                if (!container) return;
+                
+                let html = `<h3>Interactive Topic Assessment</h3><br>`;
+                quizData[topicKey].forEach((q, qIdx) => {
+                    html += `
+                        <div class="quiz-question-container" style="margin-bottom:2rem; border-bottom:1px solid var(--border); padding-bottom:1.5rem;">
+                            <p class="quiz-question">Q${qIdx+1}: ${q.q}</p>
+                            <div class="quiz-options">
+                                ${q.o.map((opt, oIdx) => `
+                                    <button class="option-btn" onclick="checkAnswer(this, '${topicKey}', ${qIdx}, ${oIdx})">${opt}</button>
+                                `).join('')}
+                            </div>
+                            <div class="quiz-feedback" id="feed-${topicKey}-${qIdx}">
+                                <p id="feed-text-${topicKey}-${qIdx}"></p>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        function checkAnswer(btn, topicKey, qIdx, oIdx) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('.option-btn');
+            const correctIdx = quizData[topicKey][qIdx].a;
+            const feedbackBox = document.getElementById(`feed-${topicKey}-${qIdx}`);
+            const feedbackText = document.getElementById(`feed-text-${topicKey}-${qIdx}`);
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (oIdx === correctIdx) {
+                btn.classList.add('correct');
+                feedbackText.innerHTML = `<strong>Correct!</strong> ${quizData[topicKey][qIdx].e}`;
+                feedbackBox.style.borderLeft = "4px solid #10b981";
+            } else {
+                btn.classList.add('incorrect');
+                buttons[correctIdx].classList.add('correct');
+                feedbackText.innerHTML = `<strong>Incorrect.</strong> ${quizData[topicKey][qIdx].e}`;
+                feedbackBox.style.borderLeft = "4px solid #ef4444";
+            }
+            feedbackBox.style.display = "block";
+        }
+
+        /* Handler Logic Engines for Topic 6 Module Content Cards */
+        function evaluateTF(button, userSelection) {
+            const cardItem = button.closest('.analysis-card-item');
+            if (cardItem.classList.contains('evaluated')) return;
+
+            const targetCorrect = cardItem.getAttribute('data-tf-correct');
+            const contextualButtons = cardItem.querySelectorAll('.option-btn');
+            const feedbackBox = cardItem.querySelector('.quiz-feedback');
+
+            contextualButtons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText.toLowerCase() === targetCorrect) {
+                    btn.classList.add('correct');
+                } else if (btn === button && userSelection !== targetCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            feedbackBox.style.borderLeft = (userSelection === targetCorrect) ? "4px solid #10b981" : "4px solid #ef4444";
+            feedbackBox.style.display = "block";
+            cardItem.classList.add('evaluated');
+        }
+
+        function evaluateMCQ(button, userSelection) {
+            const cardItem = button.closest('.analysis-card-item');
+            if (cardItem.classList.contains('evaluated')) return;
+
+            const targetCorrect = cardItem.getAttribute('data-mcq-correct');
+            const contextualButtons = cardItem.querySelectorAll('.option-btn');
+            const feedbackBox = cardItem.querySelector('.quiz-feedback');
+
+            contextualButtons.forEach(btn => {
+                btn.disabled = true;
+                const letterPrefix = btn.innerText.trim().charAt(0);
+                if (letterPrefix === targetCorrect) {
+                    btn.classList.add('correct');
+                } else if (btn === button && userSelection !== targetCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            feedbackBox.style.borderLeft = (userSelection === targetCorrect) ? "4px solid #10b981" : "4px solid #ef4444";
+            feedbackBox.style.display = "block";
+            cardItem.classList.add('evaluated');
+        }
+
+        function recalcProgress() {
+            const totalTopics = 6; // Expanded metric denominator parameters
+            const percentage = Math.round((completedTopicsTrack.size / totalTopics) * 100);
+            document.getElementById('completionPercentage').innerText = `${percentage}%`;
+        }
+
+        function resetTracking() {
+            localStorage.removeItem('fong_progress');
+            completedTopicsTrack.clear();
+            recalcProgress();
+            alert("Progress metrics cleared.");
+        }
+
+        function handleGlobalSearch() {
+            const query = document.getElementById('globalSearch').value.toLowerCase();
+            document.querySelectorAll('.accordion-item, .analysis-card-item').forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (query && text.includes(query)) {
+                    item.style.borderColor = "#4f46e5";
+                } else {
+                    item.style.borderColor = "#2d3748";
+                }
+            });
+        }
+
+        window.onload = () => {
+            buildQuizzes();
+            recalcProgress();
+        };
+    </script>
+</body>
+</html>
